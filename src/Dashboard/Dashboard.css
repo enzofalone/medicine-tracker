@@ -1,0 +1,48 @@
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.section-action {
+  display: flex;
+  gap: 16px;
+}
+button {
+  border-radius: 5px;
+  border: none;
+  transition: all 100ms;
+}
+
+.button-take {
+  background-color: rgb(63, 121, 63);
+}
+.button-delete {
+  background-color: rgb(133, 50, 50);
+}
+
+button:hover {
+  filter: brightness(80%);
+}
+
+.no-pending {
+  margin-top: 20px;
+}
+
+.card {
+  border-radius: 5px;
+  border: rgb(92, 92, 92) solid 2px;
+  background-color: rgb(39, 39, 39);
+  padding: 16px;
+}
+
+.list-section {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

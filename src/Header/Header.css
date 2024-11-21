@@ -1,0 +1,41 @@
+.header-button {
+  color: var(--font);
+  transition: all 100ms;
+  text-decoration: underline;
+}
+
+.header-button:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.header-button:active {
+  transform: scale(0.95);
+}
+
+header {
+  background-color: rgb(53, 53, 53);
+
+  padding: 10px 32px;
+  margin-bottom: 1rem;
+}
+
+img {
+  width: 48px;
+  height: 48px;
+}
+
+.link-section {
+  display: flex;
+  gap: 16px;
+}
+
+.content {
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 0 auto;
+}

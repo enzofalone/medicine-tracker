@@ -1,0 +1,39 @@
+.main-info {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 2rem;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+.body {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 50px;
+  align-items: center;
+}
+
+.text-content {
+  max-width: 500px;
+}
+
+.logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+}
+p {
+  margin-bottom: 10px;
+}
+
+.btn {
+  width: 100px;
+  height: 40px;
+  cursor: pointer;
+}
