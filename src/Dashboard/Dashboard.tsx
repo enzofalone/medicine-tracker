@@ -1,25 +1,107 @@
 import './Dashboard.css';
 import { Medicine } from '../Medicine';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-function Dashboard({
-  getTimeLeft,
-  handleAcknowledge,
-  handleDelete,
-  medicines,
-}: any) {
-  const n = useNavigate();
+function Dashboard({ medicines, setMedicines, getIntervalInMs }: any) {
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    const savedMedicines = JSON.parse(
+      localStorage.getItem('medicines') || '[]'
+    ) as Medicine[];
+    setMedicines(savedMedicines);
+
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission();
+    }
+
+    const timer = setInterval(() => {
+      setMedicines((meds: Medicine[]) => [...meds]);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    medicines.forEach((med: Medicine) => {
+      const timeLeft = med.nextDoseTime - Date.now();
+
+      if (timeLeft <= 0 && med.times > 0 && !med.notified) {
+        showNotification(med);
+        med.notified = true;
+      }
+    });
+
+    localStorage.setItem('medicines', JSON.stringify(medicines));
+  }, [medicines]);
+
+  const showNotification = (medicine: Medicine) => {
+    if (Notification.permission === 'granted') {
+      const notif = new Notification(
+        `Time to take your medicine: ${medicine.name}`,
+        {
+          body: `You have ${medicine.times} dose(s) left.`,
+        }
+      );
+
+      notif.onclick = () => {
+        navigate('/dashboard');
+      };
+    }
+  };
+
+  const handleDelete = (index: number) => {
+    setMedicines((prevMedicines: Medicine[]) => prevMedicines.splice(index, 1));
+  };
+
+  const handleAcknowledge = (index: number) => {
+    setMedicines((prevMedicines: Medicine[]) => {
+      const updatedMedicines = [...prevMedicines];
+      const med = updatedMedicines[index];
+
+      if (med.notified && med.times > 0) {
+        med.times -= 1;
+        med.notified = false;
+
+        // If there are doses left, set the next dose time
+        if (med.times > 0) {
+          med.nextDoseTime =
+            Date.now() + getIntervalInMs(med.interval, med.unit);
+        }
+      }
+
+      // delete if last dose
+      if (med.times <= 0) {
+        updatedMedicines.splice(index, 1);
+      }
+
+      return updatedMedicines;
+    });
+  };
+
+  const getTimeLeft = (nextDoseTime: number) => {
+    const timeLeft = nextDoseTime - Date.now();
+    if (timeLeft <= 0) {
+      return 'Due now!';
+    }
+    const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
   return (
     <div className="main">
       <div>
         <div className="dashboard-header">
           <h1>Dashboard</h1>
-          <button onClick={() => n('/dashboard/add')}>Add Medicine</button>
+          <button onClick={() => navigate('/dashboard/add')}>
+            Add Medicine
+          </button>
         </div>
         <div className="list-section">
-          {medicines.length ? (
-            medicines.map((med: Medicine, index: number) => (
+          {medicines?.length ? (
+            medicines?.map((med: Medicine, index: number) => (
               <div className="card" key={index}>
                 <div>
                   <strong>{med.name}</strong> - Every {med.interval} {med.unit},{' '}
