@@ -4,8 +4,9 @@ import Login from './Login/Login';
 import Dashboard from './Dashboard/Dashboard';
 import Landing from './Landing/Landing';
 import Header from './Header/Header';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AddMedicine from './AddMedicine/AddMedicine';
+import { Medicine } from './Medicine';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,6 +15,28 @@ function App() {
   const getIntervalInMs = (interval: number, unit: 'minutes' | 'hours') => {
     return unit === 'hours' ? interval * 60 * 60 * 1000 : interval * 60 * 1000;
   };
+
+  useEffect(() => {
+    medicines.forEach((med: Medicine) => {
+      const timeLeft = med.nextDoseTime - Date.now();
+
+      if (timeLeft <= 0 && med.times > 0 && !med.notified) {
+        showNotification(med);
+        med.notified = true;
+      }
+    });
+
+    localStorage.setItem('medicines', JSON.stringify(medicines));
+  }, [medicines]);
+
+  const showNotification = (medicine: Medicine) => {
+    if (Notification.permission === 'granted') {
+      new Notification(`Time to take your medicine: ${medicine.name}`, {
+        body: `You have ${medicine.times} dose(s) left.`,
+      });
+    }
+  };
+
   return (
     <>
       <BrowserRouter basename="/">
