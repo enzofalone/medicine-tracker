@@ -1,55 +1,9 @@
 import './Dashboard.css';
 import { Medicine } from '../Medicine';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 
 function Dashboard({ medicines, setMedicines, getIntervalInMs }: any) {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const savedMedicines = JSON.parse(
-      localStorage.getItem('medicines') || '[]'
-    ) as Medicine[];
-    setMedicines(savedMedicines);
-
-    if (Notification.permission !== 'granted') {
-      Notification.requestPermission();
-    }
-
-    const timer = setInterval(() => {
-      setMedicines((meds: Medicine[]) => [...meds]);
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  useEffect(() => {
-    medicines.forEach((med: Medicine) => {
-      const timeLeft = med.nextDoseTime - Date.now();
-
-      if (timeLeft <= 0 && med.times > 0 && !med.notified) {
-        showNotification(med);
-        med.notified = true;
-      }
-    });
-
-    localStorage.setItem('medicines', JSON.stringify(medicines));
-  }, [medicines]);
-
-  const showNotification = (medicine: Medicine) => {
-    if (Notification.permission === 'granted') {
-      const notif = new Notification(
-        `Time to take your medicine: ${medicine.name}`,
-        {
-          body: `You have ${medicine.times} dose(s) left.`,
-        }
-      );
-
-      notif.onclick = () => {
-        navigate('/dashboard');
-      };
-    }
-  };
 
   const handleDelete = (index: number) => {
     setMedicines((prevMedicines: Medicine[]) => prevMedicines.splice(index, 1));

@@ -10,11 +10,29 @@ import { Medicine } from './Medicine';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [medicines, setMedicines] = useState([]);
+  const [medicines, setMedicines] = useState<Medicine[]>([]);
 
   const getIntervalInMs = (interval: number, unit: 'minutes' | 'hours') => {
     return unit === 'hours' ? interval * 60 * 60 * 1000 : interval * 60 * 1000;
   };
+
+  useEffect(() => {
+    const savedMedicines = JSON.parse(
+      localStorage.getItem('medicines') || '[]'
+    ) as Medicine[];
+
+    setMedicines(savedMedicines);
+
+    if (Notification.permission !== 'granted') {
+      Notification.requestPermission();
+    }
+
+    const timer = setInterval(() => {
+      setMedicines((meds: Medicine[]) => [...meds]);
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     medicines.forEach((med: Medicine) => {
@@ -27,6 +45,7 @@ function App() {
     });
 
     localStorage.setItem('medicines', JSON.stringify(medicines));
+    console.log('Medicine change detected');
   }, [medicines]);
 
   const showNotification = (medicine: Medicine) => {
