@@ -7,6 +7,7 @@ import Header from './Header/Header';
 import { useEffect, useState } from 'react';
 import AddMedicine from './AddMedicine/AddMedicine';
 import { Medicine } from './Medicine';
+import Prototype from './Prototype/Prototype';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,6 +67,7 @@ function App() {
             path="/login"
             element={<Login setIsLoggedIn={setIsLoggedIn} />}
           />
+          <Route path="/prototype" element={<Prototype />} />
           <Route
             path="/dashboard"
             element={

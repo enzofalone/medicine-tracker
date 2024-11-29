@@ -18,6 +18,9 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
           <h3 className={'header-button'} onClick={() => n('/')}>
             Home
           </h3>
+          <h3 className={'header-button'} onClick={() => n('/prototype')}>
+            Prototype
+          </h3>
           {isLoggedIn ? (
             <h3 className={'header-button'} onClick={() => n('/dashboard')}>
               Dashboard
