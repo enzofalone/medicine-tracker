@@ -6,11 +6,11 @@ function Dashboard({ medicines, setMedicines, getIntervalInMs }: any) {
   const navigate = useNavigate();
 
   const handleDelete = (index: number) => {
-setMedicines((prevMedicines: Medicine[]) => {
-    const updatedMedicines = [...prevMedicines];
-    updatedMedicines.splice(index, 1);
-    return updatedMedicines;
-  });
+    setMedicines((prevMedicines: Medicine[]) => {
+      const updatedMedicines = [...prevMedicines];
+      updatedMedicines.splice(index, 1);
+      return updatedMedicines;
+    });
   };
 
   const handleAcknowledge = (index: number) => {
